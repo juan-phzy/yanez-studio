@@ -1,12 +1,31 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import Lenis from "@studio-freight/lenis";
+
+import { useScroll, useTransform, motion } from "framer-motion";
+
+function useParallax(speed: number) {
+    const { scrollY } = useScroll();
+    return useTransform(scrollY, [0, 3000], [0, 3000 * speed]);
+}
 
 export default function Home() {
     const [scrolled, setScrolled] = useState(false);
+
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const [activeSection, setActiveSection] = useState<string>("home");
+
+    useEffect(() => {
+        if (isMenuOpen) {
+            document.body.style.overflow = "hidden"; // Lock background scroll
+        } else {
+            document.body.style.overflow = "";
+        }
+    }, [isMenuOpen]);
 
     useEffect(() => {
         const onScroll = () => {
@@ -14,6 +33,37 @@ export default function Home() {
         };
         window.addEventListener("scroll", onScroll);
         return () => window.removeEventListener("scroll", onScroll);
+    }, []);
+
+    useEffect(() => {
+        const lenis = new Lenis({
+            duration: 1.2,
+            smoothWheel: true,
+        });
+
+        function raf(time: number) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+
+        requestAnimationFrame(raf);
+    }, []);
+
+    useEffect(() => {
+        const sections = document.querySelectorAll("section[id]");
+        const options = { threshold: 0.6 }; // 60% visible
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    setActiveSection(entry.target.id);
+                }
+            });
+        }, options);
+
+        sections.forEach((section) => observer.observe(section));
+
+        return () => sections.forEach((section) => observer.unobserve(section));
     }, []);
 
     return (
@@ -27,46 +77,97 @@ export default function Home() {
                 }`}
             >
                 <div className="text-2xl font-bold">Yanez Studio</div>
+
+                {/* Desktop Menu */}
                 <div className="hidden md:flex space-x-8 text-sm font-semibold uppercase">
                     <Link
                         href="#about"
-                        className="hover:text-gray-500 transition"
+                        className={`hover:text-gray-500 transition ${
+                            activeSection === "about" ? "text-purple-500" : ""
+                        }`}
                     >
                         About
                     </Link>
                     <Link
                         href="#work"
-                        className="hover:text-gray-500 transition"
+                        className={`hover:text-gray-500 transition ${
+                            activeSection === "work" ? "text-purple-500" : ""
+                        }`}
                     >
                         Work
                     </Link>
                     <Link
                         href="#services"
-                        className="hover:text-gray-500 transition"
+                        className={`hover:text-gray-500 transition ${
+                            activeSection === "services"
+                                ? "text-purple-500"
+                                : ""
+                        }`}
                     >
                         Services
                     </Link>
                     <Link
                         href="#contact"
-                        className="hover:text-gray-500 transition"
+                        className={`hover:text-gray-500 transition ${
+                            activeSection === "contact" ? "text-purple-500" : ""
+                        }`}
                     >
                         Contact
                     </Link>
                 </div>
+
+                {/* Mobile Hamburger */}
+                <button
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    className="md:hidden text-2xl focus:outline-none"
+                >
+                    ☰
+                </button>
             </nav>
+
+            {/* Mobile Slide Menu */}
+            <motion.div
+                initial={{ opacity: 0, x: "100%" }}
+                animate={{
+                    opacity: isMenuOpen ? 1 : 0,
+                    x: isMenuOpen ? "0%" : "100%",
+                }}
+                transition={{ type: "tween", duration: 0.4 }}
+                className="fixed top-0 right-0 w-3/4 h-full bg-white/70 dark:bg-black/70 backdrop-blur-lg z-[999] p-8 flex flex-col gap-8 text-black dark:text-white text-lg font-semibold md:hidden"
+            >
+                <button
+                    onClick={() => setIsMenuOpen(false)}
+                    className="self-end text-3xl focus:outline-none"
+                >
+                    ✕
+                </button>
+
+                <Link href="#about" onClick={() => setIsMenuOpen(false)}>
+                    About
+                </Link>
+                <Link href="#work" onClick={() => setIsMenuOpen(false)}>
+                    Work
+                </Link>
+                <Link href="#services" onClick={() => setIsMenuOpen(false)}>
+                    Services
+                </Link>
+                <Link href="#contact" onClick={() => setIsMenuOpen(false)}>
+                    Contact
+                </Link>
+            </motion.div>
 
             {/* Hero */}
             <section className="min-h-screen flex flex-col md:flex-row items-center justify-center gap-8 px-8 pt-32 md:pt-0 relative overflow-hidden">
-                {/* Abstract Background Blur */}
+                {/* Abstract Blob Layer */}
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 0.3, scale: 1 }}
-                    transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        repeatType: "mirror",
-                    }}
-                    className="absolute top-[-100px] left-[-100px] w-[400px] h-[400px] bg-gradient-to-tr from-purple-400 via-pink-300 to-blue-300 rounded-full blur-3xl opacity-50"
+                    style={{ y: useParallax(0.8) }}
+                    className="absolute top-[-200px] left-[-200px] w-[500px] h-[500px] bg-gradient-to-tr from-purple-400 via-pink-300 to-blue-300 rounded-full blur-3xl opacity-50"
+                />
+
+                {/* Second Blob Layer */}
+                <motion.div
+                    style={{ y: useParallax(-0.8) }}
+                    className="absolute top-[300px] right-[-150px] w-[350px] h-[350px] bg-gradient-to-tr from-blue-400 via-pink-400 to-purple-400 rounded-full blur-3xl opacity-40"
                 />
 
                 {/* Text */}
@@ -77,9 +178,9 @@ export default function Home() {
                     className="flex-1 flex flex-col gap-6 text-center md:text-left z-10"
                 >
                     <h1 className="text-4xl md:text-6xl font-extrabold leading-tight">
-                        Elevate Your Brand
+                        Capture Your
                         <br />
-                        Through Creative Vision
+                        Perfect Shot
                     </h1>
                     <p className="text-lg md:text-xl max-w-md mx-auto md:mx-0">
                         Capturing the moment from above and on the ground,
@@ -100,7 +201,7 @@ export default function Home() {
                     initial={{ opacity: 0, x: 50 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 1 }}
-                    className="flex-1 relative w-full h-[400px] md:h-[600px] z-10"
+                    className="flex-2 relative w-full h-[400px] md:h-[600px] z-10"
                 >
                     <Image
                         src="/backgrounds/skyline.jpg"
