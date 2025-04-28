@@ -1,8 +1,6 @@
-/* app/globals.css */
+@import "tailwindcss";
 
-/* Tailwind is auto-injected in v4. No @tailwind layers needed. */
-
-/* Minimal custom globals */
+/* Global color variables */
 :root {
   --color-background: #ffffff;
   --color-foreground: #171717;
@@ -15,9 +13,35 @@
   }
 }
 
+/* Base body setup */
 body {
   background-color: var(--color-background);
   color: var(--color-foreground);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Base tag resets */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+p {
+  line-height: 1.6;
+  max-width: 65ch;
+  margin-inline: auto;
+}
+
+/* Utility classes (optional but clean) */
+section {
+  width: 100%;
+  position: relative;
+}
+
+/* Anchor links */
+a {
+  text-decoration: none;
 }
