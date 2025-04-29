@@ -1,68 +1,60 @@
 @import "tailwindcss";
 
-/* Global color variables */
+/* Global Color Variables */
 :root {
-  --color-background: #ffffff;
-  --color-foreground: #171717;
+    --color-background: #ffffff;
+    --color-foreground: #171717;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: #0a0a0a;
-    --color-foreground: #ededed;
-  }
+    :root {
+        --color-background: #0a0a0a;
+        --color-foreground: #ededed;
+    }
 }
 
-/* Base body setup */
+/* Base Styles */
 body {
-  background-color: var(--color-background);
-  color: var(--color-foreground);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  scroll-behavior: smooth;
-  overflow-x: hidden;
-  min-height: 100vh;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, "Helvetica Neue", Arial, sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
 }
 
-/* Base tag resets */
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 700;
-  letter-spacing: -0.02em;
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
 }
 
 p {
-  line-height: 1.6;
-  max-width: 65ch;
-  margin-inline: auto;
+    line-height: 1.6;
+    max-width: 65ch;
+    margin-inline: auto;
 }
 
-/* Utility classes (optional but clean) */
+/* Sections */
 section {
-  width: 100%;
-  position: relative;
+    width: 100%;
+    position: relative;
 }
 
-/* Anchor links */
+/* Links */
 a {
-  text-decoration: none;
+    text-decoration: none;
 }
 
-/* Floating Blobs */
-@keyframes float {
-  0% { transform: translate(0px, 0px); }
-  50% { transform: translate(100px, 100px); }
-  100% { transform: translate(0px, 0px); }
+/* Utility */
+img {
+    max-width: 100%;
+    display: block;
 }
 
-@keyframes float-reverse {
-  0% { transform: translate(0px, 0px); }
-  50% { transform: translate(-100px, 80px); }
-  100% { transform: translate(0px, 0px); }
-}
-
-.animate-float {
-  animation: float 20s ease-in-out infinite;
-}
-
-.animate-float-reverse {
-  animation: float-reverse 12s ease-in-out infinite;
-}
+/* No scroll-behavior: smooth anymore */
