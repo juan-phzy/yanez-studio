@@ -7,9 +7,13 @@ import Lenis from "@studio-freight/lenis";
 
 import { useScroll, useTransform, motion } from "framer-motion";
 
-function useParallax(speed: number) {
+function useParallax(speedY: number, speedX: number) {
     const { scrollY } = useScroll();
-    return useTransform(scrollY, [0, 3000], [0, 3000 * speed]);
+
+    const y = useTransform(scrollY, [0, 2000], [0, 200 * speedY]);
+    const x = useTransform(scrollY, [0, 2000], [0, 200 * speedX]);
+
+    return { x, y };
 }
 
 export default function Home() {
@@ -18,6 +22,9 @@ export default function Home() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const [activeSection, setActiveSection] = useState<string>("home");
+
+    const blob1 = useParallax(0.7, 0.7); // (ySpeed, xSpeed)
+    const blob2 = useParallax(-0.7, 0.7);
 
     useEffect(() => {
         if (isMenuOpen) {
@@ -158,16 +165,14 @@ export default function Home() {
 
             {/* Hero */}
             <section className="min-h-screen flex flex-col md:flex-row items-center justify-center gap-8 px-8 pt-32 md:pt-0 relative overflow-hidden">
-                {/* Abstract Blob Layer */}
                 <motion.div
-                    style={{ y: useParallax(0.8) }}
-                    className="absolute top-[-200px] left-[-200px] w-[500px] h-[500px] bg-gradient-to-tr from-purple-400 via-pink-300 to-blue-300 rounded-full blur-3xl opacity-50"
+                    style={blob1}
+                    className="absolute top-[-150px] left-[-150px] w-[350px] h-[350px] bg-gradient-to-tr from-purple-400 via-pink-300 to-blue-300 rounded-full opacity-30 will-change-transform"
                 />
 
-                {/* Second Blob Layer */}
                 <motion.div
-                    style={{ y: useParallax(-0.8) }}
-                    className="absolute top-[300px] right-[-150px] w-[350px] h-[350px] bg-gradient-to-tr from-blue-400 via-pink-400 to-purple-400 rounded-full blur-3xl opacity-40"
+                    style={blob2}
+                    className="absolute top-[300px] right-[-100px] w-[300px] h-[300px] bg-gradient-to-tr from-blue-400 via-pink-400 to-purple-400 rounded-full opacity-30 will-change-transform"
                 />
 
                 {/* Text */}
