@@ -45,3 +45,24 @@ section {
 a {
   text-decoration: none;
 }
+
+/* Floating Blobs */
+@keyframes float {
+  0% { transform: translate(0px, 0px); }
+  50% { transform: translate(100px, 100px); }
+  100% { transform: translate(0px, 0px); }
+}
+
+@keyframes float-reverse {
+  0% { transform: translate(0px, 0px); }
+  50% { transform: translate(-100px, 80px); }
+  100% { transform: translate(0px, 0px); }
+}
+
+.animate-float {
+  animation: float 20s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: float-reverse 12s ease-in-out infinite;
+}
